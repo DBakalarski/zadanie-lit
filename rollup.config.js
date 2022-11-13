@@ -15,6 +15,7 @@ export default {
     file: 'my-element.bundled.js',
     format: 'esm',
   },
+
   onwarn(warning) {
     if (warning.code !== 'THIS_IS_UNDEFINED') {
       console.error(`(!) ${warning.message}`);

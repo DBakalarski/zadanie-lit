@@ -6,6 +6,7 @@
 
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import './main-element';
 
 /**
  * An example element.
@@ -43,7 +44,7 @@ export class MyElement extends LitElement {
       <button @click=${this._onClick} part="button">
         Click Count: ${this.count}
       </button>
-      <slot></slot>
+      <main-element></main-element>
     `;
   }
 

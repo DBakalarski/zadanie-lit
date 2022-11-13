@@ -1,0 +1,1 @@
+{"version":3,"file":"reset.js","sourceRoot":"","sources":["src/reset.ts"],"names":[],"mappings":"","sourcesContent":["declare module 'minireset.css/minireset.css.lit.js';\n"]}
