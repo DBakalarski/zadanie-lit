@@ -1,8 +1,8 @@
 import {LitElement, html, css} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, query, state} from 'lit/decorators.js';
 
 import {minireset} from 'minireset.css/minireset.css.lit.js';
-import {IData} from '../types';
+import {IData, IResultsItem} from '../types';
 
 @customElement('spreadsheet-element')
 export class SpreadsheetElement extends LitElement {
@@ -41,6 +41,18 @@ export class SpreadsheetElement extends LitElement {
   @property()
   changeInput = (_value: string, _indexRow: number, _indexColum: number) => {};
 
+  @property()
+  handleChangeActiveFormula = (_value: string) => {};
+
+  @state()
+  isFormulaEdit = false;
+
+  @state()
+  activeResult: IResultsItem | undefined;
+
+  @query('#editFormula')
+  editFormulaInput!: HTMLInputElement;
+
   private _handleInputChange = (
     e: Event,
     indexRow: number,
@@ -62,6 +74,7 @@ export class SpreadsheetElement extends LitElement {
       .split('-')
       .join(',')
       .split(',');
+
     if (formula.includes(' ')) {
       return '';
     }
@@ -88,10 +101,29 @@ export class SpreadsheetElement extends LitElement {
     this.hamdleAddRow();
   }
 
+  private _handleEditFormula(result: IResultsItem) {
+    console.log('click', result.values.formulaDefinition);
+    this.isFormulaEdit = !this.isFormulaEdit;
+    this.activeResult = result;
+  }
+
+  private _handleChangeActiveFormula() {
+    console.log(this.activeResult);
+    this.handleChangeActiveFormula(this.editFormulaInput.value);
+  }
+
   override render() {
     return html`
       <div class="spreadsheet-container">
         <p>spread sheet</p>
+        <div ?hidden=${!this.isFormulaEdit}>
+          ${this.activeResult?.name}
+          <input
+            id="editFormula"
+            .value=${this.activeResult?.values.formulaDefinition ?? ''}
+          />
+          <button @click=${this._handleChangeActiveFormula}>confirm</button>
+        </div>
         <div class="spreadsheet">
           <div class="spreadsheet-left">
             ${this.data.variables.map(
@@ -113,20 +145,19 @@ export class SpreadsheetElement extends LitElement {
           </div>
           <div class="spreadsheet-right">
             ${this.data.results.map(
-              (result, indexColum) => html`
+              (result) => html`
                 <div class="single-column">
-                  <p>${result.name}</p>
+                  <p @click=${() => this._handleEditFormula(result)}>
+                    ${result.name}
+                  </p>
                   ${result.values.equal.map(
                     (value, indexRow) =>
                       html`<span
-                          >${this._transformFormulaToResult(
-                            value,
-                            indexRow
-                          )}</span
-                        >
-                        <!-- <span>${result.values.formulaDefinition}</span> -->
-                        <!-- <span>indexColum ${indexColum}</span>
-                        <span>indexRow ${indexRow}</span>  --> `
+                        >${this._transformFormulaToResult(
+                          value,
+                          indexRow
+                        )}</span
+                      > `
                   )}
                 </div>
               `

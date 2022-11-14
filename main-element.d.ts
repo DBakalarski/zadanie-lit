@@ -11,6 +11,7 @@ export declare class MainElement extends LitElement {
     private _handleRemoveFormula;
     private _handeChangeValueSpreadSheet;
     private _handleAddEmptyRow;
+    private _handleChangeFormula;
     private handleTestData;
     render(): import("lit-html").TemplateResult<1>;
 }

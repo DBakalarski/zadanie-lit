@@ -5,13 +5,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { LitElement, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { minireset } from 'minireset.css/minireset.css.lit.js';
 let SpreadsheetElement = class SpreadsheetElement extends LitElement {
     constructor() {
         super(...arguments);
         this.hamdleAddRow = () => { };
         this.changeInput = (_value, _indexRow, _indexColum) => { };
+        this.handleChangeActiveFormula = (_value) => { };
+        this.isFormulaEdit = false;
         this._handleInputChange = (e, indexRow, indexColum) => {
             const input = e.target;
             this.changeInput(input.value, indexRow, indexColum);
@@ -45,10 +47,28 @@ let SpreadsheetElement = class SpreadsheetElement extends LitElement {
     _handleAddRow() {
         this.hamdleAddRow();
     }
+    _handleEditFormula(result) {
+        console.log('click', result.values.formulaDefinition);
+        this.isFormulaEdit = !this.isFormulaEdit;
+        this.activeResult = result;
+    }
+    _handleChangeActiveFormula() {
+        console.log(this.activeResult);
+        this.handleChangeActiveFormula(this.editFormulaInput.value);
+    }
     render() {
+        var _a, _b, _c;
         return html `
       <div class="spreadsheet-container">
         <p>spread sheet</p>
+        <div ?hidden=${!this.isFormulaEdit}>
+          ${(_a = this.activeResult) === null || _a === void 0 ? void 0 : _a.name}
+          <input
+            id="editFormula"
+            .value=${(_c = (_b = this.activeResult) === null || _b === void 0 ? void 0 : _b.values.formulaDefinition) !== null && _c !== void 0 ? _c : ''}
+          />
+          <button @click=${this._handleChangeActiveFormula}>confirm</button>
+        </div>
         <div class="spreadsheet">
           <div class="spreadsheet-left">
             ${this.data.variables.map((variable, indexColum) => html `
@@ -63,15 +83,14 @@ let SpreadsheetElement = class SpreadsheetElement extends LitElement {
               `)}
           </div>
           <div class="spreadsheet-right">
-            ${this.data.results.map((result, indexColum) => html `
+            ${this.data.results.map((result) => html `
                 <div class="single-column">
-                  <p>${result.name}</p>
+                  <p @click=${() => this._handleEditFormula(result)}>
+                    ${result.name}
+                  </p>
                   ${result.values.equal.map((value, indexRow) => html `<span
-                          >${this._transformFormulaToResult(value, indexRow)}</span
-                        >
-                        <!-- <span>${result.values.formulaDefinition}</span> -->
-                        <!-- <span>indexColum ${indexColum}</span>
-                        <span>indexRow ${indexRow}</span>  --> `)}
+                        >${this._transformFormulaToResult(value, indexRow)}</span
+                      > `)}
                 </div>
               `)}
           </div>
@@ -115,6 +134,18 @@ __decorate([
 __decorate([
     property()
 ], SpreadsheetElement.prototype, "changeInput", void 0);
+__decorate([
+    property()
+], SpreadsheetElement.prototype, "handleChangeActiveFormula", void 0);
+__decorate([
+    state()
+], SpreadsheetElement.prototype, "isFormulaEdit", void 0);
+__decorate([
+    state()
+], SpreadsheetElement.prototype, "activeResult", void 0);
+__decorate([
+    query('#editFormula')
+], SpreadsheetElement.prototype, "editFormulaInput", void 0);
 SpreadsheetElement = __decorate([
     customElement('spreadsheet-element')
 ], SpreadsheetElement);

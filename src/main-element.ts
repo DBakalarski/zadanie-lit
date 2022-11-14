@@ -91,6 +91,10 @@ export class MainElement extends LitElement {
     this._data = newData;
   }
 
+  private _handleChangeFormula(value: string) {
+    console.log('_handleChangeFormula', value);
+  }
+
   private handleTestData() {
     console.log('data', this._data);
   }
@@ -112,6 +116,7 @@ export class MainElement extends LitElement {
         .data=${this._data}
         .changeInput=${this._handeChangeValueSpreadSheet.bind(this)}
         .hamdleAddRow=${this._handleAddEmptyRow.bind(this)}
+        .handleChangeActiveFormula=${this._handleChangeFormula.bind(this)}
       ></spreadsheet-element>
       <button @click=${this.handleTestData}>Check data</button>
     `;

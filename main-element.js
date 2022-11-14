@@ -72,6 +72,9 @@ let MainElement = class MainElement extends LitElement {
         newData.results.forEach((_, index) => newData.results[index].values.equal.push(newData.results[index].values.formulaDefinition));
         this._data = newData;
     }
+    _handleChangeFormula(value) {
+        console.log('_handleChangeFormula', value);
+    }
     handleTestData() {
         console.log('data', this._data);
     }
@@ -92,6 +95,7 @@ let MainElement = class MainElement extends LitElement {
         .data=${this._data}
         .changeInput=${this._handeChangeValueSpreadSheet.bind(this)}
         .hamdleAddRow=${this._handleAddEmptyRow.bind(this)}
+        .handleChangeActiveFormula=${this._handleChangeFormula.bind(this)}
       ></spreadsheet-element>
       <button @click=${this.handleTestData}>Check data</button>
     `;
