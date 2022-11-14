@@ -2,6 +2,7 @@ import {LitElement, html, css} from 'lit';
 import {customElement, property, query} from 'lit/decorators.js';
 import {IResultsItem} from '../types';
 import {minireset} from 'minireset.css/minireset.css.lit.js';
+import {removeSpaces} from '../helper';
 
 @customElement('formula-container')
 export class FormulaContainer extends LitElement {
@@ -9,15 +10,20 @@ export class FormulaContainer extends LitElement {
     ${minireset}
 
     .formula-container {
-      margin-top: 40px;
+      margin-left: 40px;
       display: flex;
       flex-direction: column;
     }
     .row {
       display: flex;
+      margin: 4px 0;
+      justify-content: space-between;
     }
-    .row p {
-      margin-right: 10px;
+
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
   `;
 
@@ -37,7 +43,28 @@ export class FormulaContainer extends LitElement {
   addFormula = (_formulaName: string, _formulaDefinition: string) => {};
 
   private _handleAddFormula() {
-    this.addFormula(this.formulaNameInput.value, this.formulaInput.value);
+    if (
+      this.formulaNameInput.value.trim() === '' ||
+      this.formulaInput.value.trim() === ''
+    ) {
+      return;
+    }
+
+    let itemExist = false;
+
+    this.results.forEach((item) => {
+      if (item.name === removeSpaces(this.formulaNameInput.value)) {
+        itemExist = true;
+      }
+    });
+
+    if (itemExist) {
+      return;
+    }
+    this.addFormula(
+      removeSpaces(this.formulaNameInput.value),
+      removeSpaces(this.formulaInput.value)
+    );
     this.formulaNameInput.value = '';
     this.formulaInput.value = '';
   }
@@ -46,14 +73,10 @@ export class FormulaContainer extends LitElement {
     this.removeFormula(index);
   }
 
-  // override updated() {
-  //   console.log('updated formula');
-  // }
-
   override render() {
     return html`
       <div class="formula-container">
-        <p>Formula definition</p>
+        <p class="title">Formula definition</p>
         <div class="row">
           <p>Formula name</p>
           <p>Initial Formula</p>
@@ -72,7 +95,6 @@ export class FormulaContainer extends LitElement {
         <div class="row">
           <input id="newFormulaName" />
           <input id="newFormula" />
-
           <button @click=${this._handleAddFormula}>Add</button>
         </div>
       </div>

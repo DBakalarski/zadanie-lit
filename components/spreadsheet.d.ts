@@ -5,7 +5,7 @@ export declare class SpreadsheetElement extends LitElement {
     data: IData;
     hamdleAddRow: () => void;
     changeInput: (_value: string, _indexRow: number, _indexColum: number) => void;
-    handleChangeActiveFormula: (_value: string) => void;
+    handleChangeActiveFormula: (_value: string, _name: string) => void;
     isFormulaEdit: boolean;
     activeResult: IResultsItem | undefined;
     editFormulaInput: HTMLInputElement;

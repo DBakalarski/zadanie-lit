@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { LitElement, html, css } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { minireset } from 'minireset.css/minireset.css.lit.js';
+import { removeSpaces } from '../helper';
 let FormulaContainer = class FormulaContainer extends LitElement {
     constructor() {
         super(...arguments);
@@ -14,20 +15,30 @@ let FormulaContainer = class FormulaContainer extends LitElement {
         this.addFormula = (_formulaName, _formulaDefinition) => { };
     }
     _handleAddFormula() {
-        this.addFormula(this.formulaNameInput.value, this.formulaInput.value);
+        if (this.formulaNameInput.value.trim() === '' ||
+            this.formulaInput.value.trim() === '') {
+            return;
+        }
+        let itemExist = false;
+        this.results.forEach((item) => {
+            if (item.name === removeSpaces(this.formulaNameInput.value)) {
+                itemExist = true;
+            }
+        });
+        if (itemExist) {
+            return;
+        }
+        this.addFormula(removeSpaces(this.formulaNameInput.value), removeSpaces(this.formulaInput.value));
         this.formulaNameInput.value = '';
         this.formulaInput.value = '';
     }
     _handleRemoveFormula(index) {
         this.removeFormula(index);
     }
-    // override updated() {
-    //   console.log('updated formula');
-    // }
     render() {
         return html `
       <div class="formula-container">
-        <p>Formula definition</p>
+        <p class="title">Formula definition</p>
         <div class="row">
           <p>Formula name</p>
           <p>Initial Formula</p>
@@ -43,7 +54,6 @@ let FormulaContainer = class FormulaContainer extends LitElement {
         <div class="row">
           <input id="newFormulaName" />
           <input id="newFormula" />
-
           <button @click=${this._handleAddFormula}>Add</button>
         </div>
       </div>
@@ -54,15 +64,20 @@ FormulaContainer.styles = css `
     ${minireset}
 
     .formula-container {
-      margin-top: 40px;
+      margin-left: 40px;
       display: flex;
       flex-direction: column;
     }
     .row {
       display: flex;
+      margin: 4px 0;
+      justify-content: space-between;
     }
-    .row p {
-      margin-right: 10px;
+
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
   `;
 __decorate([

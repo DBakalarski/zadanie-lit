@@ -10,33 +10,11 @@ import { minireset } from 'minireset.css/minireset.css.lit.js';
 import './components/variables-container';
 import './components/formula-container';
 import './components/spreadsheet';
-const sampleData = {
-    variables: [
-        { name: 'var1', values: ['1', '2'] },
-        { name: 'var2', values: ['3', '4'] },
-        { name: 'var3', values: ['5', '6'] },
-    ],
-    results: [
-        {
-            name: 'cof',
-            values: {
-                equal: ['var1+var2+5', 'var1+var2+5'],
-                formulaDefinition: 'var1+var2+5',
-            },
-        },
-        {
-            name: 'cof2',
-            values: {
-                equal: ['var1+var2+var3', 'var1+var2+var3'],
-                formulaDefinition: 'var1+var2+var3',
-            },
-        },
-    ],
-};
 let MainElement = class MainElement extends LitElement {
     constructor() {
         super(...arguments);
-        this._data = sampleData;
+        this._data = { variables: [], results: [] };
+        this._isSpreadsheetVisibile = false;
     }
     _handleAddVariable(variableName) {
         const newData = { ...this._data };
@@ -54,6 +32,7 @@ let MainElement = class MainElement extends LitElement {
             name: formulaName,
             values: { equal: [], formulaDefinition },
         });
+        // const newEquals = newData.results[index].values.equal.map(() => value);
         this._data = newData;
     }
     _handleRemoveFormula(index) {
@@ -72,41 +51,65 @@ let MainElement = class MainElement extends LitElement {
         newData.results.forEach((_, index) => newData.results[index].values.equal.push(newData.results[index].values.formulaDefinition));
         this._data = newData;
     }
-    _handleChangeFormula(value) {
-        console.log('_handleChangeFormula', value);
+    _handleChangeFormula(value, name) {
+        const newData = { ...this._data };
+        const index = newData.results.findIndex((result) => result.name === name);
+        const newEquals = newData.results[index].values.equal.map(() => value);
+        newData.results[index].values.formulaDefinition = value;
+        newData.results[index].values.equal = newEquals;
+        this._data = newData;
     }
-    handleTestData() {
-        console.log('data', this._data);
+    _handleShowSpreadshet() {
+        this._isSpreadsheetVisibile = true;
+        this._handleAddEmptyRow();
     }
     render() {
         return html `
-      <variables-container
-        .variables=${this._data.variables}
-        .addVariable=${this._handleAddVariable.bind(this)}
-        .removeVariable=${this._handleRemoveVariable.bind(this)}
-      ></variables-container>
-      <formula-container
-        .results=${this._data.results}
-        .addFormula=${this._handleAddFormula.bind(this)}
-        .removeFormula=${this._handleRemoveFormula.bind(this)}
+      <div class="main-container">
+        <variables-container
+          ?hidden=${this._isSpreadsheetVisibile}
+          .variables=${this._data.variables}
+          .addVariable=${this._handleAddVariable.bind(this)}
+          .removeVariable=${this._handleRemoveVariable.bind(this)}
+        ></variables-container>
+        <formula-container
+          ?hidden=${this._isSpreadsheetVisibile}
+          .results=${this._data.results}
+          .addFormula=${this._handleAddFormula.bind(this)}
+          .removeFormula=${this._handleRemoveFormula.bind(this)}
+        >
+        </formula-container>
+      </div>
+
+      <button
+        @click=${this._handleShowSpreadshet}
+        ?hidden=${this._isSpreadsheetVisibile}
       >
-      </formula-container>
+        Generate spreadsheets
+      </button>
       <spreadsheet-element
+        ?hidden=${!this._isSpreadsheetVisibile}
         .data=${this._data}
         .changeInput=${this._handeChangeValueSpreadSheet.bind(this)}
         .hamdleAddRow=${this._handleAddEmptyRow.bind(this)}
         .handleChangeActiveFormula=${this._handleChangeFormula.bind(this)}
       ></spreadsheet-element>
-      <button @click=${this.handleTestData}>Check data</button>
     `;
     }
 };
 MainElement.styles = css `
     ${minireset}
+    .main-container {
+      display: flex;
+      padding: 20px;
+    }
   `;
 __decorate([
     state()
 ], MainElement.prototype, "_data", void 0);
+__decorate([
+    state()
+], MainElement.prototype, "_isSpreadsheetVisibile", void 0);
 MainElement = __decorate([
     customElement('main-element')
 ], MainElement);

@@ -5,6 +5,7 @@ import './components/spreadsheet';
 export declare class MainElement extends LitElement {
     static styles: import("lit").CSSResult;
     private _data;
+    private _isSpreadsheetVisibile;
     private _handleAddVariable;
     private _handleRemoveVariable;
     private _handleAddFormula;
@@ -12,7 +13,7 @@ export declare class MainElement extends LitElement {
     private _handeChangeValueSpreadSheet;
     private _handleAddEmptyRow;
     private _handleChangeFormula;
-    private handleTestData;
+    private _handleShowSpreadshet;
     render(): import("lit-html").TemplateResult<1>;
 }
 declare global {

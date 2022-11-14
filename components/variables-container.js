@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { LitElement, html, css } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { minireset } from 'minireset.css/minireset.css.lit.js';
+import { removeSpaces, startsWithNumber } from '../helper';
 let VariablesContainer = class VariablesContainer extends LitElement {
     constructor() {
         super(...arguments);
@@ -14,7 +15,20 @@ let VariablesContainer = class VariablesContainer extends LitElement {
         this.addVariable = (_variableName) => { };
     }
     _handleAddVariable() {
-        this.addVariable(this.input.value);
+        if (this.input.value.trim() === '')
+            return;
+        if (startsWithNumber(this.input.value.trim()))
+            return;
+        let itemExist = false;
+        const inputValue = removeSpaces(this.input.value);
+        this.variables.forEach((item) => {
+            if (item.name === inputValue) {
+                itemExist = true;
+            }
+        });
+        if (itemExist)
+            return;
+        this.addVariable(inputValue);
         this.input.value = '';
     }
     _handleRemoveVariable(index) {
@@ -23,7 +37,7 @@ let VariablesContainer = class VariablesContainer extends LitElement {
     render() {
         return html `
       <div class="variables-container">
-        <p>Variable definition</p>
+        <p class="title">Variable definition</p>
         <div class="row">
           <p>Variable name</p>
           <p>Action</p>
@@ -50,9 +64,14 @@ VariablesContainer.styles = css `
     }
     .row {
       display: flex;
+      margin: 4px 0;
+      justify-content: space-between;
     }
-    .row p {
-      margin-right: 10px;
+
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
   `;
 __decorate([

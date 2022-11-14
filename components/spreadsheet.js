@@ -12,7 +12,7 @@ let SpreadsheetElement = class SpreadsheetElement extends LitElement {
         super(...arguments);
         this.hamdleAddRow = () => { };
         this.changeInput = (_value, _indexRow, _indexColum) => { };
-        this.handleChangeActiveFormula = (_value) => { };
+        this.handleChangeActiveFormula = (_value, _name) => { };
         this.isFormulaEdit = false;
         this._handleInputChange = (e, indexRow, indexColum) => {
             const input = e.target;
@@ -48,19 +48,18 @@ let SpreadsheetElement = class SpreadsheetElement extends LitElement {
         this.hamdleAddRow();
     }
     _handleEditFormula(result) {
-        console.log('click', result.values.formulaDefinition);
-        this.isFormulaEdit = !this.isFormulaEdit;
+        this.isFormulaEdit = true;
         this.activeResult = result;
     }
     _handleChangeActiveFormula() {
-        console.log(this.activeResult);
-        this.handleChangeActiveFormula(this.editFormulaInput.value);
+        var _a, _b;
+        this.handleChangeActiveFormula(this.editFormulaInput.value, (_b = (_a = this.activeResult) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '');
+        this.isFormulaEdit = false;
     }
     render() {
         var _a, _b, _c;
         return html `
       <div class="spreadsheet-container">
-        <p>spread sheet</p>
         <div ?hidden=${!this.isFormulaEdit}>
           ${(_a = this.activeResult) === null || _a === void 0 ? void 0 : _a.name}
           <input
@@ -75,6 +74,7 @@ let SpreadsheetElement = class SpreadsheetElement extends LitElement {
                 <div class="single-column">
                   <p>${variable.name}</p>
                   ${variable.values.map((value, indexRow) => html `<input
+                        class="cell"
                         .value=${value}
                         @input=${(e) => this._handleInputChange(e, indexRow, indexColum)}
                         type="number"
@@ -88,7 +88,7 @@ let SpreadsheetElement = class SpreadsheetElement extends LitElement {
                   <p @click=${() => this._handleEditFormula(result)}>
                     ${result.name}
                   </p>
-                  ${result.values.equal.map((value, indexRow) => html `<span
+                  ${result.values.equal.map((value, indexRow) => html `<span class="cell"
                         >${this._transformFormulaToResult(value, indexRow)}</span
                       > `)}
                 </div>
@@ -123,6 +123,10 @@ SpreadsheetElement.styles = css `
     }
     .spreadsheet-right {
       display: flex;
+    }
+
+    .cell {
+      height: 25px;
     }
   `;
 __decorate([

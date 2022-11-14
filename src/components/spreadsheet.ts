@@ -30,6 +30,10 @@ export class SpreadsheetElement extends LitElement {
     .spreadsheet-right {
       display: flex;
     }
+
+    .cell {
+      height: 25px;
+    }
   `;
 
   @property()
@@ -42,7 +46,7 @@ export class SpreadsheetElement extends LitElement {
   changeInput = (_value: string, _indexRow: number, _indexColum: number) => {};
 
   @property()
-  handleChangeActiveFormula = (_value: string) => {};
+  handleChangeActiveFormula = (_value: string, _name: string) => {};
 
   @state()
   isFormulaEdit = false;
@@ -102,20 +106,21 @@ export class SpreadsheetElement extends LitElement {
   }
 
   private _handleEditFormula(result: IResultsItem) {
-    console.log('click', result.values.formulaDefinition);
-    this.isFormulaEdit = !this.isFormulaEdit;
+    this.isFormulaEdit = true;
     this.activeResult = result;
   }
 
   private _handleChangeActiveFormula() {
-    console.log(this.activeResult);
-    this.handleChangeActiveFormula(this.editFormulaInput.value);
+    this.handleChangeActiveFormula(
+      this.editFormulaInput.value,
+      this.activeResult?.name ?? ''
+    );
+    this.isFormulaEdit = false;
   }
 
   override render() {
     return html`
       <div class="spreadsheet-container">
-        <p>spread sheet</p>
         <div ?hidden=${!this.isFormulaEdit}>
           ${this.activeResult?.name}
           <input
@@ -133,6 +138,7 @@ export class SpreadsheetElement extends LitElement {
                   ${variable.values.map(
                     (value, indexRow) =>
                       html`<input
+                        class="cell"
                         .value=${value}
                         @input=${(e: Event) =>
                           this._handleInputChange(e, indexRow, indexColum)}
@@ -152,7 +158,7 @@ export class SpreadsheetElement extends LitElement {
                   </p>
                   ${result.values.equal.map(
                     (value, indexRow) =>
-                      html`<span
+                      html`<span class="cell"
                         >${this._transformFormulaToResult(
                           value,
                           indexRow
