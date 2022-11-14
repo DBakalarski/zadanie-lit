@@ -1,15 +1,15 @@
 ---
 layout: example.11ty.cjs
-title: <my-element> ⌲ Examples ⌲ Name Property
+title: <main-element> ⌲ Examples ⌲ Name Property
 tags: example
 name: Name Property
 description: Setting the name property
 ---
 
-<my-element name="Earth"></my-element>
+<main-element name="Earth"></main-element>
 
 <h3>HTML</h3>
 
 ```html
-<my-element name="Earth"></my-element>
+<main-element name="Earth"></main-element>
 ```
