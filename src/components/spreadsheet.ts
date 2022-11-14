@@ -10,6 +10,7 @@ export class SpreadsheetElement extends LitElement {
     ${minireset}
     .spreadsheet-container {
       margin-top: 50px;
+      box-sizing: border-box;
     }
 
     .single-column {

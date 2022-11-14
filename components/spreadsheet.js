@@ -104,6 +104,7 @@ SpreadsheetElement.styles = css `
     ${minireset}
     .spreadsheet-container {
       margin-top: 50px;
+      box-sizing: border-box;
     }
 
     .single-column {
