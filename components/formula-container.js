@@ -21,6 +21,9 @@ let FormulaContainer = class FormulaContainer extends LitElement {
     _handleRemoveFormula(index) {
         this.removeFormula(index);
     }
+    // override updated() {
+    //   console.log('updated formula');
+    // }
     render() {
         return html `
       <div class="formula-container">
@@ -38,8 +41,8 @@ let FormulaContainer = class FormulaContainer extends LitElement {
               </button>
             </div>`)}
         <div class="row">
-          <input id="newFormula" />
           <input id="newFormulaName" />
+          <input id="newFormula" />
 
           <button @click=${this._handleAddFormula}>Add</button>
         </div>

@@ -5,7 +5,7 @@ export interface IData {
 
 export interface IVariablesItem {
   name: string;
-  values: (number | null)[];
+  values: string[];
 }
 
 export interface IResultsItem {
@@ -14,6 +14,6 @@ export interface IResultsItem {
 }
 
 export interface IResultsItemValues {
-  equal: (number | null)[];
+  equal: string[];
   formulaDefinition: string;
 }
