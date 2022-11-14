@@ -89,7 +89,6 @@ export class MainElement extends LitElement {
     );
 
     this._data = newData;
-    console.log('nw', newData);
   }
 
   private handleTestData() {

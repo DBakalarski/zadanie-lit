@@ -71,7 +71,6 @@ let MainElement = class MainElement extends LitElement {
         newData.variables.forEach((_, index) => newData.variables[index].values.push(''));
         newData.results.forEach((_, index) => newData.results[index].values.equal.push(newData.results[index].values.formulaDefinition));
         this._data = newData;
-        console.log('nw', newData);
     }
     handleTestData() {
         console.log('data', this._data);

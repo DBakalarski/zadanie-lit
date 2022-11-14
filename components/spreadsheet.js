@@ -19,18 +19,13 @@ let SpreadsheetElement = class SpreadsheetElement extends LitElement {
     }
     _transformFormulaToResult(formulaDefinition, indexRow) {
         let formula = formulaDefinition;
-        // console.log('formula', formula);
         const variablesName = this.data.variables.map((variable) => variable.name);
-        // console.log('variablesName', variablesName);
         const formulaArray = formula
             .split('+')
             .join(',')
             .split('-')
             .join(',')
             .split(',');
-        // console.log('formulaArray', formulaArray);
-        console.log('formula', formula);
-        console.log('formulaArray', formulaArray);
         if (formula.includes(' ')) {
             return '';
         }
